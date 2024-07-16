@@ -10,9 +10,11 @@ import tn.esprit.eventsproject.services.IEventServices;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @RequiredArgsConstructor
 @RequestMapping("event")
 @RestController
+@CrossOrigin("*")
 public class EventRestController {
     private final IEventServices eventServices;
 
@@ -35,5 +37,15 @@ public class EventRestController {
     @GetMapping("/getLogs/{d1}/{d2}")
     public List<Logistics> getLogistiquesDates (@PathVariable("d1") LocalDate date_debut, @PathVariable("d2") LocalDate date_fin){
         return eventServices.getLogisticsDates(date_debut,date_fin);
+    }
+
+    @GetMapping("/allEvents")
+    public List<Event> getAllEvents() {
+        return eventServices.getAllEvents();
+    }
+
+    @GetMapping("/allParticipants")
+    public List<Participant> getAllParticipants() {
+        return eventServices.getAllParticipants();
     }
 }
