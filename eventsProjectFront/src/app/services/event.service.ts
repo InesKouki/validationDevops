@@ -9,7 +9,7 @@ import { Logistics } from '../models/logistics.model';
   providedIn: 'root'
 })
 export class EventService {
-  private baseUrl = 'http://192.168.33.10:8088/event';
+  private baseUrl = 'http://192.168.33.10:8088/events/event';
 
   constructor(private http: HttpClient) {}
 
