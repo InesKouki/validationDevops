@@ -10,8 +10,8 @@ pipeline {
         MAVEN_REPO_URL = 'http://192.168.33.10:8081/repository/Jenkins-repository/'
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
         SPRING_IMAGE_NAME = 'ineskouki/events-project'
-        SPRING_IMAGE_TAG = '1.0.0-SNAPSHOT'
-        ANGULAR_IMAGE_NAME = 'ineskouki/eventsProjectFront'
+        SPRING_IMAGE_TAG = '1.0.0-snapshot'
+        ANGULAR_IMAGE_NAME = 'ineskouki/eventsprojectfront'
         ANGULAR_IMAGE_TAG = 'latest'
     }
 

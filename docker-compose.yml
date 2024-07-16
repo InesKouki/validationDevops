@@ -5,7 +5,7 @@ services:
     image: mysql:latest
     container_name: mysql
     environment:
-      MYSQL_DATABASE: eventsProject
+      MYSQL_DATABASE: eventsproject
       MYSQL_ROOT_PASSWORD: rootpassword
     ports:
       - "3307:3306"
@@ -15,10 +15,10 @@ services:
       - events-network
 
   spring-boot-app:
-    image: ineskouki/events-project:1.0.0-SNAPSHOT
+    image: ineskouki/events-project:1.0.0-snapshot
     container_name: spring-boot-app
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/eventsProject?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/eventsproject?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: rootpassword
     ports:
@@ -29,7 +29,7 @@ services:
       - events-network
 
   angular-app:
-    image: ineskouki/eventsProjectFront
+    image: ineskouki/eventsprojectfront
     container_name: angular-app
     ports:
       - "4200:80"
