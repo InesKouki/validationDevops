@@ -20,7 +20,7 @@ RUN ng build --configuration production
 RUN ls -al /app/dist
 
 FROM nginx:alpine
-COPY --from=build /app/dist/eventsProjectFront /usr/share/nginx/html
+COPY --from=build /app/dist/events-project-front /usr/share/nginx/html
 
 EXPOSE 80
 
