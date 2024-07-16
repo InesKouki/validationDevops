@@ -40,59 +40,57 @@ pipeline {
         }
         stage("Sonarqube Analysis") {
             steps {
-                script {
-                    withSonarQubeEnv('Sonarqube') {
-                        sh "mvn sonar:sonar"
+                dir('eventsProject') {
+                    script {
+                        withSonarQubeEnv('Sonarqube') {
+                            sh "mvn sonar:sonar"
+                        }
                     }
                 }
             }
         }
         stage("Quality Gate") {
             steps {
-                script {
-                    waitForQualityGate abortPipeline: false, credentialsId: 'sonarqube'
+                dir('eventsProject') {
+                    script {
+                        waitForQualityGate abortPipeline: false, credentialsId: 'sonarqube'
+                    }
                 }
             }
         }
         stage("Deploy to Nexus") {
             steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: env.MAVEN_CREDENTIALS_ID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                        sh """
-                            mvn deploy:deploy-file \\
-                            -DgroupId=tn.esprit \\
-                            -DartifactId=eventsProject \\
-                            -Dversion=1.0-SNAPSHOT \\
-                            -Dpackaging=jar \\
-                            -Dfile=target/eventsProject-1.0.0-SNAPSHOT.jar \\
-                            -DrepositoryId=deploymentRepo \\
-                            -Durl=${env.MAVEN_REPO_URL} \\
-                            -Dusername=$USERNAME \\
-                            -Dpassword=$PASSWORD
-                        """
+                dir('eventsProject') {
+                    script {
+                        withCredentials([usernamePassword(credentialsId: env.MAVEN_CREDENTIALS_ID, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                            sh """
+                                mvn deploy:deploy-file \\
+                                -DgroupId=tn.esprit \\
+                                -DartifactId=eventsProject \\
+                                -Dversion=1.0-SNAPSHOT \\
+                                -Dpackaging=jar \\
+                                -Dfile=target/eventsProject-1.0.0-SNAPSHOT.jar \\
+                                -DrepositoryId=deploymentRepo \\
+                                -Durl=${env.MAVEN_REPO_URL} \\
+                                -Dusername=$USERNAME \\
+                                -Dpassword=$PASSWORD
+                            """
+                        }
                     }
                 }
             }
         }
-        stage("Build Docker Image") {
+        stage("Build and Push Docker Image") {
             steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh '''
-                            docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
-                        '''
-                    }
-                }
-            }
-        }
-        stage("Push Docker Image") {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh '''
-                            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-                            docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                        '''
+                dir('eventsProject') {
+                    script {
+                        withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                            sh '''
+                                docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                                echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                                docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                            '''
+                        }
                     }
                 }
             }
