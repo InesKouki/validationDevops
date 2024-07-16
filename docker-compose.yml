@@ -1,3 +1,6 @@
+version: '3.8'
+
+services:
   mysql:
     image: mysql:latest
     container_name: mysql
@@ -15,26 +18,26 @@
     image: ineskouki/events-project:1.0.0-SNAPSHOT
     container_name: spring-boot-app
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/eventsProject?&createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/eventsProject?createDatabaseIfNotExist=true&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: rootpassword
     ports:
-      - "8088:8089"
+      - "8088:8080"
     depends_on:
       - mysql
     networks:
       - events-network
-  
-    angular-app:
+
+  angular-app:
     image: ineskouki/eventsProjectFront
-    container_name: docker-compose-angular-app
+    container_name: angular-app
     ports:
       - "4200:80"
     depends_on:
       - spring-boot-app
     networks:
       - events-network
- 
+
 volumes:
   mysql-data:
 

@@ -9,8 +9,10 @@ pipeline {
         MAVEN_CREDENTIALS_ID = 'jenkins-nexus'
         MAVEN_REPO_URL = 'http://192.168.33.10:8081/repository/Jenkins-repository/'
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
-        IMAGE_NAME = 'ineskouki/events-project'
-        IMAGE_TAG = '1.0.0-SNAPSHOT'
+        SPRING_IMAGE_NAME = 'ineskouki/events-project'
+        SPRING_IMAGE_TAG = '1.0.0-SNAPSHOT'
+        ANGULAR_IMAGE_NAME = 'ineskouki/eventsProjectFront'
+        ANGULAR_IMAGE_TAG = 'latest'
     }
 
     stages {
@@ -24,14 +26,14 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/InesKouki/validationDevops.git'
             }
         }
-        stage("Build Application") {
+        stage("Build Spring Boot Application") {
             steps {
                 dir('eventsProject') {
                     sh "mvn clean package"
                 }
             }
         }
-        stage("Test Application") {
+        stage("Test Spring Boot Application") {
             steps {
                 dir('eventsProject') {
                     sh "mvn test"
@@ -58,7 +60,7 @@ pipeline {
                 }
             }
         }
-        stage("Deploy to Nexus") {
+        stage("Deploy Spring Boot Application to Nexus") {
             steps {
                 dir('eventsProject') {
                     script {
@@ -80,15 +82,30 @@ pipeline {
                 }
             }
         }
-        stage("Build and Push Docker Image") {
+        stage("Build and Push Spring Boot Docker Image") {
             steps {
                 dir('eventsProject') {
                     script {
                         withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                             sh '''
-                                docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                                docker build -t ${SPRING_IMAGE_NAME}:${SPRING_IMAGE_TAG} .
                                 echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-                                docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                                docker push ${SPRING_IMAGE_NAME}:${SPRING_IMAGE_TAG}
+                            '''
+                        }
+                    }
+                }
+            }
+        }
+        stage("Build and Push Angular App Docker Image") {
+            steps {
+                dir('eventsProjectFront') {
+                    script {
+                        withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                            sh '''
+                                docker build -t ${ANGULAR_IMAGE_NAME}:${ANGULAR_IMAGE_TAG} .
+                                echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                                docker push ${ANGULAR_IMAGE_NAME}:${ANGULAR_IMAGE_TAG}
                             '''
                         }
                     }
