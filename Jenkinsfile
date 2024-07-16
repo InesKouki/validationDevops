@@ -21,7 +21,7 @@ pipeline {
        }
        stage('Checkout from SCM') {
            steps {
-               git branch: 'master', url: 'https://github.com/InesKouki/validationDevops.git'
+               git branch: 'main', url: 'https://github.com/InesKouki/validationDevops.git'
            }
        }
        stage("Build Application") {
