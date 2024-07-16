@@ -1,0 +1,21 @@
+<mat-card class="participant-add-container">
+    <mat-card-title>Add Participant</mat-card-title>
+    <form (ngSubmit)="onSubmit()">
+      <mat-form-field class="full-width">
+        <mat-label>Nom</mat-label>
+        <input matInput [(ngModel)]="participant.nom" name="nom" required>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Prenom</mat-label>
+        <input matInput [(ngModel)]="participant.prenom" name="prenom" required>
+      </mat-form-field>
+      <mat-form-field class="full-width">
+        <mat-label>Tache</mat-label>
+        <mat-select [(ngModel)]="participant.tache" name="tache" required>
+          <mat-option *ngFor="let tache of taches" [value]="tache">{{tache}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" type="submit">Add Participant</button>
+    </form>
+  </mat-card>
+  
