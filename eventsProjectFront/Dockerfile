@@ -17,7 +17,7 @@ COPY . .
 
 
 RUN ng build --configuration production
-
+RUN ls -al /app/dist
 
 FROM nginx:alpine
 COPY --from=build /app/dist/eventsProjectFront /usr/share/nginx/html
