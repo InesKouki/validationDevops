@@ -3,7 +3,7 @@ pipeline {
         options {
         skipDefaultCheckout() 
     }
-
+//test
     environment {
         MAVEN_CREDENTIALS_ID = 'jenkins-nexus'
         MAVEN_REPO_URL = 'http://192.168.33.11:8081/repository/Jenkins-repository/'
