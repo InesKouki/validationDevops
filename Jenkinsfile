@@ -39,7 +39,6 @@ pipeline {
                 dir('eventsProject') {
                     script {
                         withSonarQubeEnv('Sonarqube') {
-                            // Run SonarQube analysis
                             sh "mvn sonar:sonar"
                         }
                         
