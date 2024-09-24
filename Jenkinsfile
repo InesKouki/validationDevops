@@ -15,11 +15,6 @@ pipeline {
     }
 
     stages {
-        // stage("Cleanup Workspace") {
-        //     steps {
-        //         cleanWs()
-        //     }
-        // }
         stage('Github checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/InesKouki/validationDevops.git'
