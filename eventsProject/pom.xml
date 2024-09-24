@@ -18,7 +18,7 @@
     <description>eventsProject</description>
 
     <properties>
-        <java.version>17</java.version> <!-- Matching Java 17 used in Jenkins -->
+        <java.version>1.8</java.version> <!-- Matching Java 17 used in Jenkins -->
         <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
