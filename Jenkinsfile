@@ -60,15 +60,15 @@ pipeline {
                 }
             }
         }
-        stage('Upload to Nexus'){
-            steps{
-                dir('eventsProject'){
-                    script{
-                        sh 'mvn deploy -DskipTests'
-                    }
-                }
-            }
-        }
+        // stage('Upload to Nexus'){
+        //     steps{
+        //         dir('eventsProject'){
+        //             script{
+        //                 sh 'mvn deploy -DskipTests'
+        //             }
+        //         }
+        //     }
+        // }
         stage("Build and Push Spring Boot Docker Image") {
             steps {
                 dir('eventsProject') {
