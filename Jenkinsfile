@@ -4,6 +4,9 @@ pipeline {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
     }
+        options {
+        skipDefaultCheckout() // This will skip the default SCM checkout stage
+    }
 
     environment {
         MAVEN_CREDENTIALS_ID = 'jenkins-nexus'
@@ -16,12 +19,12 @@ pipeline {
     }
 
     stages {
-        stage("Cleanup Workspace") {
-            steps {
-                cleanWs()
-            }
-        }
-        stage('Checkout from SCM') {
+        // stage("Cleanup Workspace") {
+        //     steps {
+        //         cleanWs()
+        //     }
+        // }
+        stage('Github checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/InesKouki/validationDevops.git'
             }
