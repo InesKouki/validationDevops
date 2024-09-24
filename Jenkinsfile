@@ -1,9 +1,9 @@
 pipeline {
     agent any
-    tools {
-        jdk 'JAVA_HOME'
-        maven 'M2_HOME'
-    }
+    // tools {
+    //     jdk 'JAVA_HOME'
+    //     maven 'M2_HOME'
+    // }
         options {
         skipDefaultCheckout() // This will skip the default SCM checkout stage
     }
@@ -43,22 +43,19 @@ pipeline {
                 }
             }
         }
-        stage("Sonarqube Analysis") {
+        stage("Sonarqube Analysis and Quality Gate") {
             steps {
                 dir('eventsProject') {
                     script {
                         withSonarQubeEnv('Sonarqube') {
+                            // Run SonarQube analysis
                             sh "mvn sonar:sonar"
                         }
-                    }
-                }
-            }
-        }
-        stage("Quality Gate") {
-            steps {
-                dir('eventsProject') {
-                    script {
-                        waitForQualityGate abortPipeline: false, credentialsId: 'sonarqube'
+                        
+                        def qualityGate = waitForQualityGate abortPipeline: false, credentialsId: 'sonarqube'
+                        if (qualityGate.status != 'OK') {
+                            error "Pipeline aborted due to Quality Gate failure: ${qualityGate.status}"
+                        }
                     }
                 }
             }
