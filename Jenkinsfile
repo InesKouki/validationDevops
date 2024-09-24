@@ -69,65 +69,65 @@ pipeline {
         //         }
         //     }
         // }
-        stage("Build and Push Spring Boot Docker Image") {
-            steps {
-                dir('eventsProject') {
-                    script {
-                        withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                            sh '''
-                                docker build -t ${SPRING_IMAGE_NAME}:${SPRING_IMAGE_TAG} .
-                                echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-                                docker push ${SPRING_IMAGE_NAME}:${SPRING_IMAGE_TAG}
-                            '''
-                        }
-                    }
-                }
-            }
-        }
-        stage("Build and Push Angular App Docker Image") {
-            steps {
-                dir('eventsProjectFront') {
-                    script {
-                        withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                            sh '''
-                                docker build -t ${ANGULAR_IMAGE_NAME}:${ANGULAR_IMAGE_TAG} .
-                                echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-                                docker push ${ANGULAR_IMAGE_NAME}:${ANGULAR_IMAGE_TAG}
-                            '''
-                        }
-                    }
-                }
-            }
-        }
-        stage("Deploy with Docker Compose") {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh '''
-                            docker-compose down
-                            docker-compose pull
-                            docker-compose up -d
-                        '''
-                    }
-                }
-            }
-        }
-        stage('Deploying Grafana and Prometheus') {
-            steps {
-                dir('eventsProject') {
-                    script {
-                        def prometheusExists = sh(script: "docker inspect --type=container prometheus", returnStatus: true) == 0
-                        def grafanaExists = sh(script: "docker inspect --type=container grafana", returnStatus: true) == 0
+        // stage("Build and Push Spring Boot Docker Image") {
+        //     steps {
+        //         dir('eventsProject') {
+        //             script {
+        //                 withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+        //                     sh '''
+        //                         docker build -t ${SPRING_IMAGE_NAME}:${SPRING_IMAGE_TAG} .
+        //                         echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+        //                         docker push ${SPRING_IMAGE_NAME}:${SPRING_IMAGE_TAG}
+        //                     '''
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // stage("Build and Push Angular App Docker Image") {
+        //     steps {
+        //         dir('eventsProjectFront') {
+        //             script {
+        //                 withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+        //                     sh '''
+        //                         docker build -t ${ANGULAR_IMAGE_NAME}:${ANGULAR_IMAGE_TAG} .
+        //                         echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+        //                         docker push ${ANGULAR_IMAGE_NAME}:${ANGULAR_IMAGE_TAG}
+        //                     '''
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+        // stage("Deploy with Docker Compose") {
+        //     steps {
+        //         script {
+        //             withCredentials([usernamePassword(credentialsId: env.DOCKER_CREDENTIALS_ID, usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+        //                 sh '''
+        //                     docker-compose down
+        //                     docker-compose pull
+        //                     docker-compose up -d
+        //                 '''
+        //             }
+        //         }
+        //     }
+        // }
+        // stage('Deploying Grafana and Prometheus') {
+        //     steps {
+        //         dir('eventsProject') {
+        //             script {
+        //                 def prometheusExists = sh(script: "docker inspect --type=container prometheus", returnStatus: true) == 0
+        //                 def grafanaExists = sh(script: "docker inspect --type=container grafana", returnStatus: true) == 0
 
-                        if (prometheusExists && grafanaExists) {
-                            echo 'Prometheus and Grafana are already running. Skipping deployment.'
-                        } else {
-                            sh 'docker-compose -f docker-compose-monitoring.yml up -d'
-                        }
-                    }
-                }
-            }
-        }
+        //                 if (prometheusExists && grafanaExists) {
+        //                     echo 'Prometheus and Grafana are already running. Skipping deployment.'
+        //                 } else {
+        //                     sh 'docker-compose -f docker-compose-monitoring.yml up -d'
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     post {
