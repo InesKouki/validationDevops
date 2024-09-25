@@ -4,8 +4,8 @@ pipeline {
         skipDefaultCheckout() 
     }
     environment {
-        MAVEN_CREDENTIALS_ID = 'jenkins-nexus'
-        MAVEN_REPO_URL = 'http://192.168.33.11:8081/repository/Jenkins-repository/'
+        // MAVEN_CREDENTIALS_ID = 'jenkins-nexus'
+        // MAVEN_REPO_URL = 'http://192.168.33.11:8081/repository/Jenkins-repository/'
         DOCKER_CREDENTIALS_ID = 'docker-hub-credentials'
         SPRING_IMAGE_NAME = 'ineskouki/events-project'
         SPRING_IMAGE_TAG = '1.0.0-snapshot'
